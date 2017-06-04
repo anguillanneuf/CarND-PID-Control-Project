@@ -18,6 +18,24 @@ public:
     double Kd;
 
     /*
+     * Params for Twiddle
+     */
+    int i_step;
+    int min_steps;
+    int num_steps;
+
+    double dKp;
+    double dKd ;
+    double dKi;
+
+    double total_err;
+    double best_err;
+
+    int twiddle_index;
+    bool start_twiddle;
+    bool increase_coefficient;
+
+    /*
     * Constructor
     */
     PID();
@@ -41,6 +59,17 @@ public:
     * Calculate the total PID error.
     */
     double TotalError();
+
+    /*
+    * Calculate PID control.
+    */
+    double Output();
+
+    /*
+     * Twiddle to find best Kp, Ki, Kd
+     */
+    void Twiddle(double tolerance);
+
 };
 
 #endif /* PID_H */

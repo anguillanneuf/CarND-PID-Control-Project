@@ -35,8 +35,8 @@ int main() {
     PID pid;
     PID pid_speed;
     // TODO: Initialize the pid variable.
-    pid.Init(0.1, 0.0, 1.5);
-    pid_speed.Init(0.2, 0.001, 2.0);
+    pid.Init(0.2, 0.0, 3.8);
+    pid_speed.Init(0.2, 0.0, 2.0);
 
     h.onMessage([&pid, &pid_speed](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
         // "42" at the start of the message means there's a websocket message event.
@@ -52,8 +52,10 @@ int main() {
                     double cte = std::stod(j[1]["cte"].get<std::string>());
                     double speed = std::stod(j[1]["speed"].get<std::string>());
                     double angle = std::stod(j[1]["steering_angle"].get<std::string>());
-                    double steer_value;
 
+                    // angle = deg2rad(angle);
+
+                    double steer_value;
                     double speed_value = 50.0;
                     double throttle_value;
 
@@ -64,18 +66,23 @@ int main() {
                     * another PID controller to control the speed!
                     */
 
-
+                    // update steer to minimize cte
                     pid.UpdateError(cte);
-                    steer_value = pid.TotalError();
+                    steer_value = fmax(-1.0, fmin(pid.Output(), 1.0));
+                    pid.Twiddle(1e-3);
 
+
+                    // update throttle to maintain speed at 50 mph
                     double speed_error = speed - speed_value;
                     pid_speed.UpdateError(speed_error);
-                    throttle_value = fmax(0.0, pid_speed.TotalError());
-
+                    throttle_value = fmax(-0.1, fmin(pid_speed.Output(), 0.9));
 
 
                     // DEBUG
                     std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
+                    std::cout << "Step: " << pid.i_step
+                              << " Best Kp: " << pid.Kp << " Ki: " << pid.Ki
+                              << " Kd: " << pid.Kd << " Error: " << pid.best_err << std::endl;
 
                     json msgJson;
                     msgJson["steering_angle"] = steer_value;
