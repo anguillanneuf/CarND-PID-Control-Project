@@ -35,7 +35,7 @@ int main() {
     PID pid;
     PID pid_speed;
     // TODO: Initialize the pid variable.
-    pid.Init(0.2, 0.0, 3.8);
+    pid.Init(0.2, 0.0, 4.0);
     pid_speed.Init(0.2, 0.0, 2.0);
 
     h.onMessage([&pid, &pid_speed](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
@@ -75,7 +75,7 @@ int main() {
                     // update throttle to maintain speed at 50 mph
                     double speed_error = speed - speed_value;
                     pid_speed.UpdateError(speed_error);
-                    throttle_value = fmax(-0.1, fmin(pid_speed.Output(), 0.9));
+                    throttle_value = fmax(-0.1, fmin(pid_speed.Output(), 0.9)); // nice brake
 
 
                     // DEBUG

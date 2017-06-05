@@ -18,8 +18,6 @@ void PID::Init(double Kp, double Ki, double Kd) {
 
     p_error = i_error = d_error = 0.0;
 
-    /* Twiddle params
-     */
     i_step = 0;
     min_steps = 100;
     num_steps = 300;
@@ -53,7 +51,7 @@ double PID::TotalError() {
     return total_err;
 }
 
-// Make this tolerance bigger if you are timing out!
+// Make this tolerance bigger if you are timing out
 void PID::Twiddle(double tolerance) {
     if(i_step >= num_steps){
 
