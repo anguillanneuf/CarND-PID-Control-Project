@@ -29,13 +29,32 @@ std::string hasData(std::string s) {
     return "";
 }
 
-int main() {
+int main(int argc, const char *argv[]){
     uWS::Hub h;
 
     PID pid;
     PID pid_speed;
     // TODO: Initialize the pid variable.
-    pid.Init(0.2, 0.0, 4.0);
+
+    // suggested by Udacity reviewer to speed up testing.
+    double kp_;
+    double ki_;
+    double kd_;
+
+    if (argc == 4 ) {
+
+        kp_ = strtod( argv[1], NULL ) ;
+        ki_ = strtod( argv[2], NULL ) ;
+        kd_ = strtod( argv[3], NULL ) ;
+
+    } else {
+        std::cout << "Usage ./pid.exe kp ki kd " << std::endl ;
+        return -1 ;
+    }
+
+    pid.Init(kp_, ki_, kd_) ;
+
+    // pid.Init(0.2, 0.0025, 8.0);
     pid_speed.Init(0.2, 0.0, 2.0);
 
     h.onMessage([&pid, &pid_speed](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
