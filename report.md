@@ -50,4 +50,4 @@ def twiddle(tol=0.2):
 ```
 ## Project Video
 
-[![pid_video](Screen Shot 2017-06-09 at 9.08.10 PM.png)](https://youtu.be/EHFHzK1hJJE)
+[![pid_video](./Screen Shot 2017-06-09 at 9.08.10 PM.png)](https://youtu.be/EHFHzK1hJJE)
